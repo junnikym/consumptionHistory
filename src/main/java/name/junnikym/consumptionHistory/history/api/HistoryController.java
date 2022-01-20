@@ -108,4 +108,7 @@ public class HistoryController {
 		return;
 	}
 
+	@GetMapping("/test")
+	public String test() { return "test"; }
+
 }

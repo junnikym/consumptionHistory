@@ -5,6 +5,7 @@ import name.junnikym.consumptionHistory.history.domain.History;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -39,5 +40,17 @@ public class Member implements Serializable {
 
 	@OneToMany(mappedBy = "writer")
 	private List<History> histories;
+
+
+	/**
+	 * 비밀번호를 암호화하는 Encoder
+	 *
+	 * @param passwordEncoder : SpringSecurity 의 PasswordEncoder
+	 * @return this
+	 */
+	public Member encryptPassword(PasswordEncoder passwordEncoder) {
+		this.password = passwordEncoder.encode(this.password);
+		return this;
+	}
 
 }

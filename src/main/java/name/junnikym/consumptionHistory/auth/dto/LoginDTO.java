@@ -1,4 +1,4 @@
-package name.junnikym.consumptionHistory.member.dto;
+package name.junnikym.consumptionHistory.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data @Builder
 @AllArgsConstructor
-public class MemberLoginDTO {
+public class LoginDTO {
 
 	private String email;
 

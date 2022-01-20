@@ -1,10 +1,14 @@
 package name.junnikym.consumptionHistory.history.domain;
 
 import lombok.*;
+import name.junnikym.consumptionHistory.member.domain.Member;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Entity
@@ -25,6 +29,9 @@ public class History implements Serializable {
 
 	private String detailMemo;
 
-	//@TODO : Add Member
+
+
+	@ManyToOne
+	private Member writer;
 
 }
