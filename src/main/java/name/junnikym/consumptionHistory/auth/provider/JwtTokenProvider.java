@@ -3,8 +3,8 @@ package name.junnikym.consumptionHistory.auth.provider;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import name.junnikym.consumptionHistory.member.domain.Member;
 import name.junnikym.consumptionHistory.member.service.MemberService;
-import name.junnikym.consumptionHistory.member.vo.MemberDetailVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,7 +36,7 @@ public class JwtTokenProvider {
 	 * @return 생성된 JWT
 	 */
 	public String generateToken(Authentication authentication) {
-		MemberDetailVO detail = (MemberDetailVO) authentication.getPrincipal();
+		Member detail = (Member) authentication.getPrincipal();
 
 		return Jwts.builder()
 				.setSubject(detail.getUsername())

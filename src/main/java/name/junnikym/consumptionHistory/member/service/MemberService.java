@@ -2,9 +2,7 @@ package name.junnikym.consumptionHistory.member.service;
 
 import lombok.RequiredArgsConstructor;
 import name.junnikym.consumptionHistory.exception.NotFoundException;
-import name.junnikym.consumptionHistory.member.domain.Member;
 import name.junnikym.consumptionHistory.member.repository.MemberRepository;
-import name.junnikym.consumptionHistory.member.vo.MemberDetailVO;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -25,10 +23,8 @@ public class MemberService implements UserDetailsService {
 	 */
 	@Override
 	public UserDetails loadUserByUsername (String email) {
-		Member member = memberRepository.findByEmail(email)
+		return memberRepository.findByEmail(email)
 				.orElseThrow(() -> new NotFoundException(email));
-
-		return new MemberDetailVO (member);
 	}
 
 }
