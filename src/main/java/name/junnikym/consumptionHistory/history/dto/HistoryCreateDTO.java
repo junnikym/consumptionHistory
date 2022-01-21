@@ -3,14 +3,11 @@ package name.junnikym.consumptionHistory.history.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.UUID;
+import name.junnikym.consumptionHistory.history.domain.History;
 
 @Data @Builder
 @AllArgsConstructor
 public class HistoryCreateDTO {
-
-	private UUID id;
 
 	private Long amount;
 
@@ -18,6 +15,14 @@ public class HistoryCreateDTO {
 
 	private String detailMemo;
 
-	//@TODO : Add Member
+	public History toEntity() {
+
+		return History.builder()
+				.amount(this.amount)
+				.summaryMemo(this.summaryMemo)
+				.detailMemo(this.detailMemo)
+				.build();
+
+	}
 
 }

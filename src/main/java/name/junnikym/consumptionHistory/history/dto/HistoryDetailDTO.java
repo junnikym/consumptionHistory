@@ -1,12 +1,13 @@
 package name.junnikym.consumptionHistory.history.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import name.junnikym.consumptionHistory.history.domain.History;
 
 @Data @Builder
 @AllArgsConstructor
 public class HistoryDetailDTO {
+
+	private Long amount;
 
 	private String summaryMemo;
 

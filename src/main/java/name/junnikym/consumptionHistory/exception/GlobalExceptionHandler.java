@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.lang.reflect.InvocationTargetException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -16,6 +18,11 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler({Exception.class, IllegalAccessException.class, InvocationTargetException.class })
+	public ResponseEntity<String> handleNotFoundException(Exception e) {
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
