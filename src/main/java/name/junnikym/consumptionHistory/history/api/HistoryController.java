@@ -105,7 +105,7 @@ public class HistoryController {
 			@AuthenticationPrincipal Member writer,
 			@RequestParam("id") List<UUID> ids
 	) {
-		historyService.deleteOrRecoverHistoryList(writer, ids, true);
+		Integer result = historyService.deleteOrRecoverHistoryList(writer, ids, true);
 	}
 
 	/**
