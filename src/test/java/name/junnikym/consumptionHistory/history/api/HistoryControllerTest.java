@@ -16,10 +16,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,24 +37,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
 
+@Transactional
+@Testcontainers
+@ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
-@Transactional
 @DisplayName("소비기록 API 테스트")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class HistoryControllerTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	private MockMvc mockMvc;
 
 	@Autowired
-	HistoryService historyService;
+	private HistoryService historyService;
 
 	@Autowired
-	ObjectMapper objectMapper;
+	private ObjectMapper objectMapper;
 
 	final String apiVersionUrl = "/api/v1";
-
 
 	/**
 	 * Test Member 생성
@@ -125,8 +133,8 @@ class HistoryControllerTest {
 	class HistoryCreationTest {
 
 		final Integer amount = 1000;
-		final String summaryMemo = "소비내역 생성 테스트 - JUnit";
-		final String detailMemo = "JUnit에서 소비내역 생성 테스트";
+		final String summaryMemo = "History creation test - JUnit";
+		final String detailMemo = "History creation test on JUnit";
 
 		/**
 		 * 로그인을 하지 않고 소비내역을 생성하려 했을 경우
@@ -183,13 +191,13 @@ class HistoryControllerTest {
 	 * 	-> 테스트 진행 전 3개의 History 객체 생성 후 테스트 진행
 	 */
 	@Nested
-	@DisplayName("태스트 소비내역 생성 후 진행한 테스트")
+	@DisplayName("소비내역 생성 후 진행한 테스트")
 	@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 	class AfterHistoryCreate {
 
 		final Long amount = 1000L;
-		final String summaryMemo = "소비내역 조회 테스트 - JUnit (";
-		final String detailMemo = "JUnit에서 소비내역 조회 테스트";
+		final String summaryMemo = "History selection test - JUnit (";
+		final String detailMemo = "History selection test on JUnit";
 
 		private List<History> histories;
 
@@ -198,16 +206,21 @@ class HistoryControllerTest {
 			histories = new ArrayList<>();
 
 			for (Integer i = 1; i <= 3; i++) {
-				histories.add(
-						historyService.createHistory(
-								testMember,
-								HistoryCreateDTO.builder()
-										.amount(amount)
-										.summaryMemo(summaryMemo + i.toString() + ")")
-										.detailMemo(detailMemo)
-										.build()
-						)
-				);
+				try {
+					histories.add(
+							historyService.createHistory(
+									testMember,
+									HistoryCreateDTO.builder()
+											.amount(amount)
+											.summaryMemo(summaryMemo + i.toString() + ")")
+											.detailMemo(detailMemo)
+											.build()
+							)
+					);
+				}
+				catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -348,8 +361,8 @@ class HistoryControllerTest {
 
 			// 0번째 객체를 아래 값으로 수정
 			final Integer updatedAmount = 9000;
-			final String updatedSummaryMemo = "소비내역 수정 테스트 - JUnit (?)";
-			final String updatedDetailMemo = "JUnit에서 소비내역 생성된 객체를 수정함.";
+			final String updatedSummaryMemo = "History update test - JUnit (?)";
+			final String updatedDetailMemo = "History update test on JUnit";
 
 			private MockHttpServletRequestBuilder updateRequest (String id) throws Exception {
 				return put(apiVersionUrl + "/history/" + id)
