@@ -10,12 +10,13 @@ import name.junnikym.consumptionHistory.history.dto.HistoryUpdateDTO;
 import name.junnikym.consumptionHistory.history.repository.HistoryRepository;
 import name.junnikym.consumptionHistory.member.domain.Member;
 import name.junnikym.consumptionHistory.util.FindNullProperties;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +46,8 @@ public class HistoryService {
 	 * @param isDeleted : True 시 삭제된 기록 / False 시 정상적인 소비내역 목록
 	 * @return 소비내역 목록
 	 */
-	public List<HistorySummaryDTO> getOwnHistoryList(Member writer, Boolean isDeleted) {
-		return historyRepository.getHistorySummaryDTOByWriterAndIsDeleted(writer, isDeleted)
+	public List<HistorySummaryDTO> getOwnHistoryList(Member writer, Boolean isDeleted, Pageable pageable) {
+		return historyRepository.getHistorySummaryDTOByWriterAndIsDeleted(writer, isDeleted, pageable)
 				.orElseThrow(IllegalArgumentException::new);
 	}
 
@@ -112,14 +113,19 @@ public class HistoryService {
 	 * 선택된 소비내역 리스트를 모두 삭제/복구
 	 *  @param ids : 소비내역 고유 ID 리스트
 	 * @param isDelete : true 시 삭제 기능 / false 시 복구 기능
-	 * @return 삭제/복구 된 소비내역 갯수
+	 * @return 삭제/복구 중 실패한 객체의 갯수
 	 */
 	public Integer deleteOrRecoverHistoryList(
 			Member writer,
 			List<UUID> ids,
 			Boolean isDelete
 	) {
-		return historyRepository.deleteOrRecoverHistories(writer, ids, isDelete);
+		Integer result = historyRepository.deleteOrRecoverHistories(writer, ids, isDelete);
+
+		if(result == 0)
+			throw new NotFoundException("All Histories");
+
+		return ids.size() - result;
 	}
 
 	public void fullyDeleteHistoryList(

@@ -3,6 +3,7 @@ package name.junnikym.consumptionHistory.history.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sun.istack.NotNull;
 import lombok.*;
 import name.junnikym.consumptionHistory.member.domain.Member;
 import org.hibernate.annotations.*;
@@ -26,9 +27,11 @@ public class History implements Serializable {
 	private UUID id;
 
 	// 금액
+	@Column(nullable = false)
 	private Long amount;
 
 	// 결제 내용 메모 요약본 (제목)
+	@Column(nullable = false)
 	private String summaryMemo;
 
 	// 결제 내용 메모 자세히

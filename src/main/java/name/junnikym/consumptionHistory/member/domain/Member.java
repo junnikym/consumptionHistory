@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -30,10 +31,12 @@ public class Member implements UserDetails, Serializable {
 	@Column(columnDefinition = "BINARY(16)")
 	private UUID id;
 
-	@Column(unique = true)
+	@Email
+	@Column(unique = true, nullable = false)
 	private String email;
 
 	@JsonIgnore
+	@Column(nullable = false)
 	private String password;
 
 	@CreationTimestamp

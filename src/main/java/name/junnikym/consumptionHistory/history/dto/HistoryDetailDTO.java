@@ -3,6 +3,7 @@ package name.junnikym.consumptionHistory.history.dto;
 import lombok.*;
 import name.junnikym.consumptionHistory.history.domain.History;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Data @Builder

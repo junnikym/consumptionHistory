@@ -10,6 +10,9 @@ import name.junnikym.consumptionHistory.history.service.HistoryService;
 
 import lombok.RequiredArgsConstructor;
 import name.junnikym.consumptionHistory.member.domain.Member;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -46,9 +49,10 @@ public class HistoryController {
 	 */
 	@GetMapping()
 	public List<HistorySummaryDTO> getOwnHistoryList(
-			@AuthenticationPrincipal Member writer
+			@AuthenticationPrincipal Member writer,
+			@PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
-		return historyService.getOwnHistoryList(writer, false);
+		return historyService.getOwnHistoryList(writer, false, pageable);
 	}
 
 	/**
@@ -99,13 +103,14 @@ public class HistoryController {
 	 * 삭제 목록에 해당하는 소비내역을 삭제
 	 *
 	 * @param ids : 복구 대상의 고유 ID 리스트
+	 * @return 삭제/복구 중 실패한 객체의 갯수
 	 */
 	@DeleteMapping()
-	public void deleteHistoryList(
+	public Integer deleteHistoryList(
 			@AuthenticationPrincipal Member writer,
 			@RequestParam("id") List<UUID> ids
 	) {
-		Integer result = historyService.deleteOrRecoverHistoryList(writer, ids, true);
+		return historyService.deleteOrRecoverHistoryList(writer, ids, true);
 	}
 
 	/**
@@ -115,9 +120,10 @@ public class HistoryController {
 	 */
 	@GetMapping("/delete")
 	public List<HistorySummaryDTO> getDeletedHistory(
-			@AuthenticationPrincipal Member writer
+			@AuthenticationPrincipal Member writer,
+			@PageableDefault(size = 10, sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
-		return historyService.getOwnHistoryList(writer, true);
+		return historyService.getOwnHistoryList(writer, true, pageable);
 	}
 
 	/**

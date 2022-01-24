@@ -590,7 +590,7 @@ class HistoryControllerTest {
 				)
 				void deleteHistoryWithNotExist () throws Exception {
 
-					mockMvc.perform(delete(apiVersionUrl + "/history/recover/00000000-0000-0000-0000-000000000000"))
+					mockMvc.perform(patch(apiVersionUrl + "/history/recover/00000000-0000-0000-0000-000000000000"))
 							.andExpect(status().isNotFound());
 				}
 
@@ -603,7 +603,7 @@ class HistoryControllerTest {
 				void deleteHistoryWithOtherWriter () throws Exception {
 
 					String id = deleteHistory1.getId().toString();
-					mockMvc.perform(delete(apiVersionUrl + "/history/recover/" + id))
+					mockMvc.perform(patch(apiVersionUrl + "/history/recover/" + id))
 							.andExpect(status().isNotFound());
 				}
 
@@ -612,7 +612,7 @@ class HistoryControllerTest {
 				void deleteHistoryWithFailAuth () throws Exception {
 
 					String id = deleteHistory1.getId().toString();
-					mockMvc.perform(delete(apiVersionUrl + "/history/recover/" + id))
+					mockMvc.perform(patch(apiVersionUrl + "/history/recover/" + id))
 							.andExpect(status().isUnauthorized());
 				}
 			}
