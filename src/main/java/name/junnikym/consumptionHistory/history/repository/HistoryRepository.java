@@ -8,15 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 public interface HistoryRepository extends JpaRepository<History, UUID> {
-
-	Optional<List<History>> findByWriter(Member writer);
 
 	Optional<List<HistorySummaryDTO>> getHistorySummaryDTOByWriterAndIsDeleted(Member writer, Boolean isDeleted);
 
@@ -31,5 +31,9 @@ public interface HistoryRepository extends JpaRepository<History, UUID> {
 	@Modifying
 	@Query("UPDATE History h SET h.isDeleted = :isDeleted WHERE h.id IN :ids AND h.writer = :writer")
 	Integer deleteOrRecoverHistories(@Param("writer") Member writer, @Param("ids") Collection<UUID> ids, @Param("isDeleted") Boolean isDeleted);
+
+	@Modifying
+	@Query("DELETE FROM History h WHERE h.id IN :ids AND h.writer = :writer")
+	Integer deleteByWriterAndIds(@Param("writer") Member writer, @Param("ids") List<UUID> ids);
 
 }

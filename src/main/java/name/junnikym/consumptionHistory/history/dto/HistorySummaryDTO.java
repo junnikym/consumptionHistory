@@ -12,6 +12,8 @@ public class HistorySummaryDTO {
 
 	private UUID id;
 
+	private Long amount;
+
 	private String summaryMemo;
 
 }

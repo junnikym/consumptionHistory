@@ -11,7 +11,6 @@ import name.junnikym.consumptionHistory.history.repository.HistoryRepository;
 import name.junnikym.consumptionHistory.member.domain.Member;
 import name.junnikym.consumptionHistory.util.FindNullProperties;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.InvocationTargetException;
@@ -111,16 +110,23 @@ public class HistoryService {
 
 	/**
 	 * 선택된 소비내역 리스트를 모두 삭제/복구
-	 *
-	 * @param ids : 소비내역 고유 ID 리스트
+	 *  @param ids : 소비내역 고유 ID 리스트
 	 * @param isDelete : true 시 삭제 기능 / false 시 복구 기능
+	 * @return 삭제/복구 된 소비내역 갯수
 	 */
-	public void recoverHistoryList(
+	public Integer deleteOrRecoverHistoryList(
 			Member writer,
 			List<UUID> ids,
 			Boolean isDelete
 	) {
-		Integer result = historyRepository.deleteOrRecoverHistories(writer, ids, isDelete);
+		return historyRepository.deleteOrRecoverHistories(writer, ids, isDelete);
+	}
+
+	public void fullyDeleteHistoryList(
+			Member writer,
+			List<UUID> ids
+	) {
+		Integer result = historyRepository.deleteByWriterAndIds(writer, ids);
 	}
 
 }

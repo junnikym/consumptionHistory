@@ -10,6 +10,7 @@ import name.junnikym.consumptionHistory.history.service.HistoryService;
 
 import lombok.RequiredArgsConstructor;
 import name.junnikym.consumptionHistory.member.domain.Member;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/api/v1/history")
+@RequestMapping(value = "/api/v1/history", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor()
 public class HistoryController {
 
@@ -95,16 +96,16 @@ public class HistoryController {
 	}
 
 	/**
-	 * 복구 목록에 해당하는 소비내역을 복구
+	 * 삭제 목록에 해당하는 소비내역을 삭제
 	 *
 	 * @param ids : 복구 대상의 고유 ID 리스트
 	 */
-	@PatchMapping("/delete")
+	@DeleteMapping()
 	public void deleteHistoryList(
 			@AuthenticationPrincipal Member writer,
-			@RequestBody List<UUID> ids
+			@RequestParam("id") List<UUID> ids
 	) {
-		historyService.recoverHistoryList(writer, ids, true);
+		historyService.deleteOrRecoverHistoryList(writer, ids, true);
 	}
 
 	/**
@@ -140,9 +141,9 @@ public class HistoryController {
 	@PatchMapping("/recover")
 	public void recoverHistoryList(
 			@AuthenticationPrincipal Member writer,
-			@RequestBody List<UUID> ids
+			@RequestParam("id") List<UUID> ids
 	) {
-		historyService.recoverHistoryList(writer, ids, false);
+		historyService.deleteOrRecoverHistoryList(writer, ids, false);
 	}
 
 }

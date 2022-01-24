@@ -39,6 +39,12 @@ public class History implements Serializable {
 	@ColumnDefault("false")
 	private Boolean isDeleted;
 
+	@CreationTimestamp
+	private Timestamp createAt;
+
+	@UpdateTimestamp
+	private Timestamp updateAt;
+
 
 
 	@ManyToOne
